@@ -1,61 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nibble Notes PWA</title>
+  <meta name="description" content="Simple note-taking app – note before you forget"/>
 
-<title>Nibble Notes</title>
+  <!-- PWA required meta tags -->
+  <meta name="theme-color" content="#6f42c1"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="icon" href="/icon-192.png"/>
 
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css">
+  <!-- iOS support -->
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
 
+  <link rel="stylesheet" href="style.css"/>
 </head>
-
 <body>
+  <header>
+    <h1>Nibble Notes</h1>
+    <p>Note before you forget.</p>
+  </header>
 
-<header class="topbar">
+  <main>
+    <input type="text" id="noteInput" placeholder="Quick nibble..." autofocus/>
+    <button onclick="addNote()">Add</button>
+    <ul id="notesList"></ul>
+  </main>
 
-<button id="menuBtn">☰</button>
+  <div id="installPrompt" style="display:none; position:fixed; bottom:16px; left:16px; right:16px; background:#6f42c1; color:white; padding:16px; border-radius:12px; text-align:center;">
+    Install Nibble Notes? 
+    <button onclick="installPWA()">Install</button>
+  </div>
 
-<h1 id="title">All Notes</h1>
-
-<div class="right-icons">
-<input type="text" id="search" placeholder="Search">
-<button id="viewToggle">⬛</button>
-</div>
-
-</header>
-
-
-<aside id="sidebar" class="sidebar">
-
-<h2>Nibble Notes</h2>
-<p>Note before you forget.</p>
-
-<ul>
-<li>All Notes</li>
-<li>Tags</li>
-<li>Starred</li>
-<li>Reminders</li>
-<li>Location Notes</li>
-<li>Link Notes</li>
-<li>Settings</li>
-</ul>
-
-</aside>
-
-
-<main id="notes"></main>
-
-
-<button id="addBtn">+</button>
-
-
-<footer class="footer">
-PRISMO Apps
-</footer>
-
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
