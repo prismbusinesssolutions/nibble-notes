@@ -3,33 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Nibble Notes</title>
+
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<meta name="theme-color" content="#6a4bc4">
+
 </head>
+
 <body>
 
 <header class="topbar">
-  <button id="menuBtn">☰</button>
-  <h1 id="pageTitle">All Notes</h1>
-  <input type="search" id="search" placeholder="Search notes">
+
+<button id="menuBtn">☰</button>
+
+<h1 id="title">All Notes</h1>
+
+<div class="right-icons">
+<input type="text" id="search" placeholder="Search">
+<button id="viewToggle">⬛</button>
+</div>
+
 </header>
 
-<aside id="sidebar" class="sidebar hidden">
-  <h2>Nibble Notes</h2>
-  <p class="tagline">Note before you forget.</p>
-  <hr>
-  <button onclick="filterNotes('all')">All Notes</button>
-  <button onclick="filterNotes('starred')">⭐ Starred</button>
+
+<aside id="sidebar" class="sidebar">
+
+<h2>Nibble Notes</h2>
+<p>Note before you forget.</p>
+
+<ul>
+<li>All Notes</li>
+<li>Tags</li>
+<li>Starred</li>
+<li>Reminders</li>
+<li>Location Notes</li>
+<li>Link Notes</li>
+<li>Settings</li>
+</ul>
+
 </aside>
 
-<main id="notesContainer"></main>
 
-<button id="addNoteBtn" class="fab">+</button>
+<main id="notes"></main>
 
-<footer class="footer">PRISMO Apps</footer>
+
+<button id="addBtn">+</button>
+
+
+<footer class="footer">
+PRISMO Apps
+</footer>
 
 <script src="app.js"></script>
+
 </body>
 </html>
