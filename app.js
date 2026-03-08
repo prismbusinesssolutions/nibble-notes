@@ -1,73 +1,57 @@
-const sidebar = document.getElementById('sidebar');
-const menuBtn = document.getElementById('menuBtn');
+// Simple in-memory notes (in real app → use IndexedDB)
+let notes = JSON.parse(localStorage.getItem('nibble-notes')) || [];
 
-const notesContainer = document.getElementById('notes');
-const addBtn = document.getElementById('addBtn');
+function renderNotes() {
+  const list = document.getElementById('notesList');
+  list.innerHTML = '';
+  notes.forEach(note => {
+    const li = document.createElement('li');
+    li.textContent = note;
+    list.appendChild(li);
+  });
+}
 
-menuBtn.onclick = () => {
-sidebar.classList.toggle('open');
-};
+function addNote() {
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if (text) {
+    notes.push(text);
+    localStorage.setItem('nibble-notes', JSON.stringify(notes));
+    renderNotes();
+    input.value = '';
+  }
+}
 
-let notes = JSON.parse(localStorage.getItem('notes') || '[]');
+// Render on load
+renderNotes();
 
-function renderNotes(){
+// PWA install prompt (modern way – beforeinstallprompt event)
+let deferredPrompt;
 
-notesContainer.innerHTML='';
-
-notes.forEach((note,i)=>{
-
-let div=document.createElement('div');
-
-div.className='note';
-
-div.innerHTML='<h3>'+note.title+'</h3><p>'+note.text+'</p>';
-
-div.onclick=()=>editNote(i);
-
-notesContainer.appendChild(div);
-
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installPrompt').style.display = 'block';
 });
 
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        console.log('PWA installed');
+      }
+      deferredPrompt = null;
+      document.getElementById('installPrompt').style.display = 'none';
+    });
+  }
 }
 
-function addNote(){
-
-let title=prompt("Note title");
-
-let text=prompt("Note text");
-
-if(title){
-
-notes.push({title,text});
-
-localStorage.setItem('notes',JSON.stringify(notes));
-
-renderNotes();
-
-}
-
-}
-
-function editNote(i){
-
-let title=prompt("Edit title",notes[i].title);
-
-let text=prompt("Edit text",notes[i].text);
-
-notes[i]={title,text};
-
-localStorage.setItem('notes',JSON.stringify(notes));
-
-renderNotes();
-
-}
-
-addBtn.onclick=addNote;
-
-renderNotes();
-
-if('serviceWorker' in navigator){
-
-navigator.serviceWorker.register('service-worker.js');
-
+// Register service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registered', reg))
+      .catch(err => console.log('Service Worker failed', err));
+  });
 }
