@@ -1,65 +1,73 @@
+const sidebar = document.getElementById('sidebar');
+const menuBtn = document.getElementById('menuBtn');
 
-let notes = JSON.parse(localStorage.getItem("nibble_notes") || "[]");
+const notesContainer = document.getElementById('notes');
+const addBtn = document.getElementById('addBtn');
 
-const container = document.getElementById("notesContainer");
-const addBtn = document.getElementById("addNoteBtn");
-const sidebar = document.getElementById("sidebar");
-const menuBtn = document.getElementById("menuBtn");
-const search = document.getElementById("search");
+menuBtn.onclick = () => {
+sidebar.classList.toggle('open');
+};
 
-menuBtn.onclick = () => sidebar.classList.toggle("hidden");
+let notes = JSON.parse(localStorage.getItem('notes') || '[]');
 
-function saveNotes(){
-localStorage.setItem("nibble_notes", JSON.stringify(notes));
-renderNotes();
-}
+function renderNotes(){
 
-function renderNotes(list=notes){
-container.innerHTML="";
-list.forEach((n,i)=>{
-const div=document.createElement("div");
-div.className="note";
-div.innerHTML=`
-<h3 contenteditable oninput="editTitle(${i},this.innerText)">${n.title}</h3>
-<p contenteditable oninput="editBody(${i},this.innerText)">${n.body}</p>
-<button onclick="deleteNote(${i})">Delete</button>
-`;
-container.appendChild(div);
+notesContainer.innerHTML='';
+
+notes.forEach((note,i)=>{
+
+let div=document.createElement('div');
+
+div.className='note';
+
+div.innerHTML='<h3>'+note.title+'</h3><p>'+note.text+'</p>';
+
+div.onclick=()=>editNote(i);
+
+notesContainer.appendChild(div);
+
 });
+
 }
 
 function addNote(){
-notes.unshift({title:"New Note",body:"Write something...",star:false});
-saveNotes();
-}
 
-function deleteNote(i){
-if(confirm("Delete this note?")){
-notes.splice(i,1);
-saveNotes();
-}
-}
+let title=prompt("Note title");
 
-function editTitle(i,val){notes[i].title=val;saveNotes();}
-function editBody(i,val){notes[i].body=val;saveNotes();}
+let text=prompt("Note text");
 
-function filterNotes(type){
-if(type==="starred"){renderNotes(notes.filter(n=>n.star));}
-else{renderNotes(notes);}
-}
+if(title){
 
-search.oninput = () => {
-let q = search.value.toLowerCase();
-renderNotes(notes.filter(n =>
-n.title.toLowerCase().includes(q) ||
-n.body.toLowerCase().includes(q)
-));
-};
+notes.push({title,text});
 
-addBtn.onclick = addNote;
+localStorage.setItem('notes',JSON.stringify(notes));
 
 renderNotes();
 
-if ('serviceWorker' in navigator) {
+}
+
+}
+
+function editNote(i){
+
+let title=prompt("Edit title",notes[i].title);
+
+let text=prompt("Edit text",notes[i].text);
+
+notes[i]={title,text};
+
+localStorage.setItem('notes',JSON.stringify(notes));
+
+renderNotes();
+
+}
+
+addBtn.onclick=addNote;
+
+renderNotes();
+
+if('serviceWorker' in navigator){
+
 navigator.serviceWorker.register('service-worker.js');
+
 }
